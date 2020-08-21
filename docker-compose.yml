@@ -9,11 +9,16 @@ services:
                 - BAOTA_INSTALL_PATH=${BAOTA_INSTALL_PATH}
                 - BAOTA_USERNAME=${BAOTA_USERNAME}
                 - BAOTA_PASSWORD=${BAOTA_PASSWORD}
+                - DNS1=${DNS1}
+                - DNS2=${DNS2}
         stdin_open: true
         tty: true
         privileged: true
         user: root
         restart: always
+        dns:
+            - ${DNS1}
+            - ${DNS2}
         ports:
             - ${BAOTA_PORT}:8888
             - ${WEB_PORT}:80
