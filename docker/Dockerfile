@@ -11,48 +11,30 @@ RUN yum install -y wget \
     && yum install -y openssh-server sudo\
     && yum install -y gd gcc-c++ libtirpc
 
-RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-rm -f /lib/systemd/system/multi-user.target.wants/*;\
-rm -f /etc/systemd/system/*.wants/*;\
-rm -f /lib/systemd/system/local-fs.target.wants/*; \
-rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-rm -f /lib/systemd/system/basic.target.wants/*;\
-rm -f /lib/systemd/system/anaconda.target.wants/*;
-
-VOLUME [ "/sys/fs/cgroup" ]
-
 
 COPY ./docker-entrypoint.sh /entrypoint.sh
-
 
 
 ARG BAOTA_INSTALL_PATH
 ARG BAOTA_USERNAME
 ARG BAOTA_PASSWORD
-
-#ARG DNS1
-#ARG DNS2
+ARG DNS1
+ARG DNS2
 
 ENV BAOTA_INSTALL_PATH $BAOTA_INSTALL_PATH
 ENV BAOTA_USERNAME $BAOTA_USERNAME
 ENV BAOTA_PASSWORD $BAOTA_PASSWORD
-
-#ENV DNS1 $DNS1
-#ENV DNS2 $DNS2
+ENV DNS1 $DNS1
+ENV DNS2 $DNS2
 
 RUN chmod +x /entrypoint.sh && sed -i "s/\r//" /entrypoint.sh \
 	&& sed -i "s|SETSOURCE=\$1|SETSOURCE=$BAOTA_INSTALL_PATH|" /entrypoint.sh \
 	&& sed -i "s|BOTAUSERNAME=\$2|BOTAUSERNAME=$BAOTA_USERNAME|" /entrypoint.sh \
-	&& sed -i "s|BOTAPASSWORD=\$3|BOTAPASSWORD=$BAOTA_PASSWORD|" /entrypoint.sh
-
-	
-	# && sed -i "s|DNS1=8.8.8.8|DNS1=$DNS1|" /entrypoint.sh \
-	# && sed -i "s|DNS2=8.8.4.4|DNS2=$DNS2|" /entrypoint.sh
-
+	&& sed -i "s|BOTAPASSWORD=\$3|BOTAPASSWORD=$BAOTA_PASSWORD|" /entrypoint.sh \
+	&& sed -i "s|DNS1=8.8.8.8|DNS1=$DNS1|" /entrypoint.sh \
+	&& sed -i "s|DNS2=8.8.4.4|DNS2=$DNS2|" /entrypoint.sh 
 
 #ENTRYPOINT /entrypoint.sh $BAOTA_INSTALL_PATH $BAOTA_USERNAME $BAOTA_PASSWORD
 
 ENTRYPOINT ["/entrypoint.sh"]
-
 CMD ["/usr/sbin/init"]

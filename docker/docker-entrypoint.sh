@@ -3,8 +3,8 @@
 SETSOURCE=$1;
 BOTAUSERNAME=$2;
 BOTAPASSWORD=$3;
-#DNS1=8.8.8.8;
-#DNS2=8.8.4.4;
+DNS1=8.8.8.8;
+DNS2=8.8.4.4;
 
 BTFILE='/etc/init.d/bt';
 
@@ -32,9 +32,9 @@ if [ $1 != '/usr/sbin/init' ];then
 
 	fi
 
-	#echo nameserver $DNS1 > /etc/resolv.conf
-	#echo nameserver $DNS2 >> /etc/resolv.conf
-	#echo options ndots:0 >> /etc/resolv.conf
+	echo nameserver $DNS1 > /etc/resolv.conf
+	echo nameserver $DNS2 >> /etc/resolv.conf
+	echo options ndots:0 >> /etc/resolv.conf
 	exit
 fi
 
